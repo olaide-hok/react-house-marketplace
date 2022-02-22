@@ -29,7 +29,7 @@ function Category() {
         // Get a reference
         const listingsRef = collection(db, 'listings')
 
-        // Create a query
+        // Create a query q
         const q = query(
           listingsRef, 
           where('type', '==', params.categoryName), 
@@ -39,8 +39,10 @@ function Category() {
 
           // Execute Query
           const querySnap = await getDocs(q)
-          let listings = []
+          const listings = []
           querySnap.forEach((doc) => {
+            console.log(doc.data());
+
             return listings.push({
               id: doc.id,
               data: doc.data()
@@ -57,6 +59,7 @@ function Category() {
       }
 
     }
+    fetchListings()
   }, [params.categoryName])
 
 
@@ -71,7 +74,7 @@ function Category() {
         </p>
       </header>
 
-      {loading ? ( <Spinner /> ) : listings && listings.length > 0
+      {loading ? <Spinner />  : listings && listings.length > 0
         ? 
         <>
           <main>
@@ -82,7 +85,7 @@ function Category() {
             </ul>
           </main>
         </> 
-        : <p>No Listings for rent {params.categoryName}</p>
+        : <p>No Listings for {params.categoryName}</p>
         }
     </div>
   )

@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword, 
   updateProfile
 } from 'firebase/auth'
-import { doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc} from "firebase/firestore";
 import { db } from '../firebase.config'
 import { useState } from 'react'
 import {ReactComponent as ArrowRightIcon} from '../assets/svg/keyboardArrowRightIcon.svg'
