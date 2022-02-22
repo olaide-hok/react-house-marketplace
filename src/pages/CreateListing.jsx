@@ -5,6 +5,7 @@ import {
   uploadBytesResumable,
   getDownloadURL
 } from "firebase/storage";
+import {addDoc, collection, serverTimestamp} from 'firebase/firestore'
 import {db} from '../firebase.config'
 import {v4 as uuidv4} from 'uuid'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
@@ -114,7 +115,6 @@ function CreateListing() {
       } else {
         geolocation.lat = latitude
         geolocation.lng = longitude
-        location = address
       }
 
       // Store Images in firebase
@@ -163,7 +163,22 @@ function CreateListing() {
           return
         })
 
-        console.log(imgUrls);
+        const formDataCopy = {
+          ...formData,
+          imgUrls,
+          geolocation,
+          timestamp: serverTimestamp()
+        }
+
+        formDataCopy.location = address
+        delete formDataCopy.images
+        delete formDataCopy.address
+        !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+        const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+        setLoading(false)
+        toast.success('Listing saved')
+        navigate(`/category/${formDataCopy.type}/${docRef.id}`)
 
 
       
